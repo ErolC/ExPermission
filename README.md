@@ -64,7 +64,7 @@ PermissionHandle build = PermissionHandle.Build()
 
 然而这两者是可以混合一起使用的，比如：
 ```
-pageUsePermissions()//将链式的权限设置
+pageUsePermissions()//权限设置
 PermissionHandle build = PermissionHandle.Build()
             .with(this)
             .setPermissionResult {//权限申请的结果反馈
