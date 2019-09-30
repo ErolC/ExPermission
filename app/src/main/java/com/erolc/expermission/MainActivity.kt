@@ -13,7 +13,6 @@ const val REQUEST_CAMERA_CODE = 0X1
 
 
 class MainActivity : AppCompatActivity() {
-    private var ipAddress = 0
     private lateinit var build: PermissionHandle
 
     override fun onCreate(savedInstanceState: Bundle?) {
