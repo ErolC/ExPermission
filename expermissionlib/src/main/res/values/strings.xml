@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">ExPermissionLib</string>
+    <string name="setting">去设置</string>
+    <string name="settingMessage">请前往权限设置中心同意权限即可进行下一步</string>
+    <string name="settingTitle">设置权限</string>
+
+
+    <!--各种权限对应的说明-->
+   <string name="READ_CALENDAR"> 读取日历活动 </string>
+   <string name="WRITE_CALENDAR"> 添加或修改日历活动以及向邀请对象发送电子邮件 </string>
+   <string name="CAMERA"> 拍照 </string>
+   <string name="READ_CONTACTS"> 读取联系人数据 </string>
+   <string name="WRITE_CONTACTS"> 写入联系数据 </string>
+   <string name="GET_ACCOUNTS"> 发现已知帐户 </string>
+   <string name="ACCESS_FINE_LOCATION"> 精准的(GPS)位置 </string>
+   <string name="ACCESS_COARSE_LOCATION"> 大概位置 </string>
+   <string name="RECORD_AUDIO"> 录音 </string>
+   <string name="READ_PHONE_STATE"> 读取手机状态和身份 </string>
+   <string name="CALL_PHONE"> 直接拨打电话号码 </string>
+   <string name="READ_CALL_LOG"> 允许应用程序读取用户的通话记录。 </string>
+   <string name="WRITE_CALL_LOG"> 允许应用程序写入（但不读取）用户的呼叫日志数据 </string>
+   <string name="ADD_VOICEMAIL"> 允许应用程序将语音邮件添加到系统中。 </string>
+   <string name="USE_SIP"> 允许应用程序使用SIP服务。 </string>
+   <string name="PROCESS_OUTGOING_CALLS"> 拦截外拨电话 </string>
+   <string name="BODY_SENSORS"> 允许应用程序访问用户用来测量身体内部情况的传感器数据，例如心率。 </string>
+   <string name="SEND_SMS"> 发送短信 </string>
+   <string name="RECEIVE_SMS"> 接收短信 </string>
+   <string name="READ_SMS"> 读取短信或彩信 </string>
+   <string name="RECEIVE_WAP_PUSH"> 接收 WAP </string>
+   <string name="READ_EXTERNAL_STORAGE"> 获取/读出SD卡中的内容 </string>
+   <string name="WRITE_EXTERNAL_STORAGE"> 修改/删除SD卡中的内容 </string>
+    
+    <string name="and_order">等</string>
+    <string name="apply_for_a_permission" formatted="false">申请%s权限,</string>
+</resources>

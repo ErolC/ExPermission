@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="titleColor">#000</color>
+    <color name="contentColor">#000</color>
+    <color name="sureButtonColor">#D81B60</color>
+    <color name="testColor">#FFEB3B</color>
+</resources>
