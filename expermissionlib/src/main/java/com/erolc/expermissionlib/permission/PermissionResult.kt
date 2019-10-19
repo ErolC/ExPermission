@@ -15,7 +15,7 @@ class PermissionResult {
      * 一次中请求的所有权限
      * 对应权限是否申请通过 0--通过，-1--不通过
      */
-    infix fun onDenied(denied: (Result) -> Unit) {
+     infix fun onDenied(denied: (Result) -> Unit) {
         this.denied = denied
     }
 

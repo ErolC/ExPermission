@@ -159,11 +159,8 @@ class TempFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         val requestCode = arguments?.getInt("requestCode")
         parentClassName = arguments?.getString("className")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val core = parentClassName?.let { PermissionCoreFactory.create(it) }
-            requestCode?.let { core?.requestPermission(this, it) }
-        }
-
+        val core = parentClassName?.let { PermissionCoreFactory.create(it) }
+        requestCode?.let { core?.requestPermission(this, it) }
     }
 
     override fun onRequestPermissionsResult(

@@ -17,7 +17,9 @@ public class TestActivity extends AppCompatActivity {
                 .with(this)
                 .pageUserPermissions(integer -> new String[]{})
                 .setPermissionResult(TranF._Unit(permissionResult -> {
+                    permissionResult.onDenied(TranF._Unit(result -> {
 
+                    }));
                 }))
                 .build();
 

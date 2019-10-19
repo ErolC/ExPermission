@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
                 else -> {
                     for (per in it.permissions)
                         loge("${per} success")
-                    showToast("申请定位与权限成功")
+                    showToast("申请定位权限成功")
                 }
             }
         } onDenied {//当权限被拒绝是被调用，这两个方法和setPermissionResult也是一样的，可以二者取其一
