@@ -15,7 +15,7 @@
 在项目app文件夹下的build.gradle文件中相应位置加入下列代码。
 ```groovy
     dependencies {
-         implementation 'com.github.ErolC:ExPermission:1.0.0'
+         implementation 'com.github.ErolC:ExPermission:1.0.1'
     }
 ```
 ## 使用
