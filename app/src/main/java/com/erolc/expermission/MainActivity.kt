@@ -10,8 +10,6 @@ import com.erolc.expermissionlib.permission.*
 
 
 const val REQUEST_CAMERA_CODE = 0X1
-
-
 class MainActivity : AppCompatActivity() {
     private lateinit var build: PermissionHandle
 

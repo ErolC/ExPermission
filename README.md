@@ -18,9 +18,16 @@
          implementation 'com.github.ErolC:ExPermission:1.0.1'
     }
 ```
+
+## api
+```
+pageUsePermissions{}//设置当前页面所需要的权限
+onGranted{}.onDenied{}//同意和取消的回调
+requestPermission()//申请权限
+```
 ## 使用
-在kotlin语言中，有两种方式<br>
-#### 第一种方式：拓展方式
+
+#### 第一种方式：扩展方式
 你可以在有fragment或者FragmentActivity实例的地方通过：
 ```
 fragment.pageUsePermissions()
