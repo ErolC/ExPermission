@@ -1,11 +1,12 @@
 package com.erolc.expermissionlib.permission
 
 import android.app.Activity
-import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.erolc.expermissionlib.model.Result
+import com.erolc.expermissionlib.permission.control.AnnotationManager
+import java.lang.ref.SoftReference
 
 /**
  * 用法：在activity或者fragment中可直接使用下列扩展方法，其中通过 pageUsePermissions()方法设置该页面需要的权限列表
@@ -48,7 +49,7 @@ fun Activity.pageUsePermissions(usePermissions: (requestCode: Int) -> Array<Stri
     core.setNeedPermissions(usePermissions)
 }
 
-fun Fragment.pageUsePermissions(usePermissions: (requestCode: Int) -> Array<String>) {
+fun androidx.fragment.app.Fragment.pageUsePermissions(usePermissions: (requestCode: Int) -> Array<String>) {
     val core = PermissionCoreFactory.create(this.javaClass.name)
     core.setNeedPermissions(usePermissions)
 }
@@ -75,6 +76,11 @@ fun Activity.requestPermissionsResult(requestCode: Int, permissions: Array<out S
  * 在FragmentActivity中的检查权限方法，该检查方法不需要设置requestPermissionsResult()
  */
 fun FragmentActivity.requestPermission(requestCode: Int = DEFAULT_REQUEST_CODE) {
+
+    val create = PermissionCoreFactory.create(this.javaClass.name)
+    if (create.manager == null)
+    AnnotationManager(SoftReference(this),create)
+
     val result: (TempFragment) -> Unit = {
         supportFragmentManager.beginTransaction().remove(it).commit()
     }
@@ -86,11 +92,17 @@ fun FragmentActivity.requestPermission(requestCode: Int = DEFAULT_REQUEST_CODE) 
  * 在Fragment中的检查权限方法，该检查方法不需要设置requestPermissionsResult()
  */
 fun Fragment.requestPermission(requestCode: Int = DEFAULT_REQUEST_CODE) {
+    val create = PermissionCoreFactory.create(this.javaClass.name)
+
+    if (create.manager == null)
+    AnnotationManager(SoftReference(this),create)
+
     val result: (TempFragment) -> Unit = { childFragmentManager.beginTransaction().remove(it).commit() }
 
     val fragment = TempFragment.getInstance(this.javaClass.name, requestCode, result)
 
     childFragmentManager.beginTransaction().add(fragment, "tags").commit()
+//    requireActivity().requestPermission(requestCode)
 }
 
 /**
@@ -178,5 +190,11 @@ class TempFragment : Fragment() {
 
 }
 
-
-
+fun <T> Array<T>.has(body: (T) -> Boolean): Boolean {
+    forEach {
+        if (body(it)) {
+            return true
+        }
+    }
+    return false
+}

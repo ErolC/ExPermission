@@ -1,8 +1,7 @@
 package com.erolc.expermissionlib.utils;
 
-import android.support.v4.util.Consumer;
+import androidx.core.util.Consumer;
 import kotlin.Unit;
-import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
 
 public class TranF{

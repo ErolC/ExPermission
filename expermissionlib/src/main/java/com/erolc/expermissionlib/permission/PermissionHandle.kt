@@ -1,7 +1,7 @@
 package com.erolc.expermissionlib.permission
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import java.lang.ref.SoftReference
 
 class PermissionHandle private constructor(private val code: PermissionCore) {
@@ -14,7 +14,7 @@ class PermissionHandle private constructor(private val code: PermissionCore) {
 
     private fun initialize() {
         //判断所需要的权限是否已经准备好了
-            code.hasPermission ?:  permissionSet?.apply { code.setNeedPermissions(this) }
+        code.hasPermission ?:  permissionSet?.apply { code.setNeedPermissions(this) }
         result?.invoke(code.result)
     }
 

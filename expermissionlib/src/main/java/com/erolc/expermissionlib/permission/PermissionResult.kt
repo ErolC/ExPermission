@@ -9,8 +9,8 @@ import com.erolc.expermissionlib.model.Result
  */
 class PermissionResult {
 
-    internal lateinit var denied: (Result) -> Unit
-    internal lateinit var granted: (Result) -> Unit
+    internal var denied: ((Result) -> Unit)? = null
+    internal var granted: ((Result) -> Unit)? = null
     /**
      * 一次中请求的所有权限
      * 对应权限是否申请通过 0--通过，-1--不通过

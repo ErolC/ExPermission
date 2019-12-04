@@ -1,7 +1,7 @@
 package com.erolc.expermissionlib.permission
 
-import android.support.annotation.ColorInt
-import android.support.annotation.StringRes
+import androidx.annotation.ColorInt
+import androidx.annotation.StringRes
 
 object Build {
 
