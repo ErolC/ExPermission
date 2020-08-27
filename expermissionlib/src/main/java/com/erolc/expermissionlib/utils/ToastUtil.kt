@@ -1,10 +1,9 @@
 package com.erolc.expermissionlib.utils
 
 import android.content.Context
-import android.support.v4.app.Fragment
-import android.support.v4.util.Consumer
 import android.widget.Toast
 import android.system.Os.accept
+import androidx.fragment.app.Fragment
 
 
 fun  makeToast(context: Context,toast: String,length:Int):Toast{

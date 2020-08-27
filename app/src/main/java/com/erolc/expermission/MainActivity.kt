@@ -2,8 +2,8 @@ package com.erolc.expermission
 
 import android.Manifest
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.erolc.expermissionlib.utils.loge
 import com.erolc.expermissionlib.utils.showToast
 import com.erolc.expermissionlib.permission.*

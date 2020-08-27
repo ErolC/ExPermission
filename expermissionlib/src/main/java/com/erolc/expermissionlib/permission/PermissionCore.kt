@@ -6,13 +6,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.Fragment
-import android.support.v4.content.PermissionChecker.checkSelfPermission
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import com.erolc.expermissionlib.R
 import com.erolc.expermissionlib.model.Result
 import org.jetbrains.anko.alert
