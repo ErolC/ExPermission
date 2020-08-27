@@ -8,17 +8,19 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
     <Button
-            android:onClick="requestCamera"
-            android:text="请求拍照"
+            android:onClick="expand"
+            android:text="扩展式"
             android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
+
     <Button
-            android:onClick="requestLocation"
-            android:text="请求定位和外部存储权限"
+            android:onClick="link"
+            android:text="链式"
             android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
 
 </LinearLayout>

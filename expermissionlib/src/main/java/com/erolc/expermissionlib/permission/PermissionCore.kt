@@ -2,19 +2,16 @@ package com.erolc.expermissionlib.permission
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
-import android.provider.Settings
-import androidx.core.app.ActivityCompat
-import androidx.core.content.PermissionChecker.checkSelfPermission
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
+import androidx.core.app.ActivityCompat
+import androidx.core.content.PermissionChecker.checkSelfPermission
+import androidx.fragment.app.Fragment
 import com.erolc.expermissionlib.R
 import com.erolc.expermissionlib.model.Result
-import com.erolc.expermissionlib.permission.control.AnnotationManager
 import com.erolc.expermissionlib.utils.loge
 import org.jetbrains.anko.alert
 
@@ -22,11 +19,11 @@ import org.jetbrains.anko.alert
 internal class PermissionCore {
 
     internal var hasPermission: ((Int) -> Array<String>)? = null
+
     internal val result = PermissionResult()
+
     //请求的所有权限
     private var requestPermission: Array<String>? = null
-    internal var manager: AnnotationManager? = null
-
     /**
      * 根据requestCode请求需要的权限
      */
@@ -40,21 +37,24 @@ internal class PermissionCore {
      * @param requestCode 请求码
      * @return 处理之后的权限，第一位为以授权部分，第二位为未授权部分
      */
-    private fun checkSelfPermission(context: Context, requestCode: Int): Pair<Array<String>, Array<String>> {
+    private fun checkSelfPermission(
+        context: Context,
+        requestCode: Int
+    ): Pair<Array<String>, Array<String>> {
         requestPermission = hasPermission?.invoke(requestCode)//获取需要请求的权限
-        if (requestPermission == null) {
-            loge("请先设置需要的权限之后再请求权限")
-        }
         val dpers = mutableListOf<String>()//所有未授权的权限
         val grantPers = mutableListOf<String>()//所有已授权的权限
         requestPermission?.all {
-            if (checkSelfPermission(context, it) != PackageManager.PERMISSION_GRANTED) {//检查是否已经同意，如果没有，则保留下来
+            val checkSelfPermission = checkSelfPermission(context, it)
+            if (checkSelfPermission != PackageManager.PERMISSION_GRANTED) {//检查是否已经同意，如果没有，则保留下来
                 dpers.add(it)
             } else {
                 grantPers.add(it)
             }
         }
-
+        if (requestPermission == null) {
+            loge("请先设置需要的权限之后再请求权限")
+        }
         return Pair(grantPers.toTypedArray(), dpers.toTypedArray())
     }
 
@@ -74,7 +74,7 @@ internal class PermissionCore {
     /**
      * Fragment的请求方法
      */
-    fun requestPermission(fragment: androidx.fragment.app.Fragment, requestCode: Int) {
+    fun requestPermission(fragment: Fragment, requestCode: Int) {
         val dpers = checkSelfPermission(fragment.requireContext(), requestCode)
         if (dpers.second.isEmpty()) {
             //当未授权部分的的大小为0，则说明全部都已经同意了。
@@ -87,7 +87,12 @@ internal class PermissionCore {
     /**
      * 请求结果处理
      */
-    fun permissionResult(activity: Activity, requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    fun permissionResult(
+        activity: Activity,
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         val grantPermission = getGrantPermission(permissions, grantResults)
         val deniedPermission = getDeniedPermission(permissions, grantResults)
         if (deniedPermission.isEmpty()) {//如果不同意的权限的集合是空的，那么全部权限都同意
@@ -95,20 +100,23 @@ internal class PermissionCore {
 
         }
 
-        var boolean = true
+        var boolean = false
         //如果存在有一个是不再提示，则直接引导用户到设置界面设置
-        var per = mutableListOf<String>()
+        val per = mutableListOf<String>()
         for (permission in deniedPermission) {
             if (!ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
-                if (boolean)
-                    boolean = false
+                if (!boolean)
+                    boolean = true
                 per.add(permission)
             }
         }
 
-        if (!boolean && Build.isShow) {
+        if (boolean) {
             //引导用户到设置界面
-            showAlert(activity, per)
+            val showDialog = Build.showDialog
+            if (showDialog == null || !showDialog.invoke(per)){
+                showAlert(activity, per)
+            }
         } else {
             result(activity, requestCode, grantPermission, deniedPermission)
         }
@@ -121,7 +129,7 @@ internal class PermissionCore {
         val contentText = activity.resources.getString(Build.content ?: R.string.settingMessage)
         val titleText = activity.resources.getString(Build.title ?: R.string.settingTitle)
 
-        var permissionsContent = StringBuffer()
+        val permissionsContent = StringBuffer()
         for (permission in per) {
             val permissionName = PermissionTable.getPermissionName(activity.resources, permission)
             if (permissionsContent.isNotEmpty()) {
@@ -132,12 +140,29 @@ internal class PermissionCore {
         val str = if (per.size > 1) activity.resources.getString(R.string.and_order) else ""
 
         val contentStr =
-            activity.resources.getString(R.string.apply_for_a_permission, permissionsContent.append(str))
+            activity.resources.getString(
+                R.string.apply_for_a_permission,
+                permissionsContent.append(str)
+            )
 
         val content = SpannableStringBuilder(contentStr)
         content.append(contentText)
+        val contentColor =
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                activity.getColor(Build.contentTextColor ?: R.color.contentColor)
+            } else {
+                activity.resources.getColor(Build.contentTextColor ?: R.color.contentColor)
+            }
+
+        val color = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            activity.getColor(Build.titleTextColor ?: R.color.titleColor)
+        } else {
+            activity.resources.getColor(
+                Build.titleTextColor ?: R.color.titleColor
+            )
+        }
         content.setSpan(
-            ForegroundColorSpan(activity.resources.getColor(Build.contentTextColor ?: R.color.contentColor)),
+            ForegroundColorSpan(contentColor),
             0,
             content.length,
             Spannable.SPAN_INCLUSIVE_EXCLUSIVE
@@ -145,7 +170,7 @@ internal class PermissionCore {
 
         val title = SpannableString(titleText)
         title.setSpan(
-            ForegroundColorSpan(activity.resources.getColor(Build.titleTextColor ?: R.color.titleColor)),
+            ForegroundColorSpan(color),
             0,
             title.length,
             Spannable.SPAN_INCLUSIVE_EXCLUSIVE
@@ -153,11 +178,7 @@ internal class PermissionCore {
 
         activity.alert(content, title) {
             negativeButton(Build.sureButtonText ?: R.string.setting) {
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                val uri = Uri.fromParts("package", activity.packageName, null)
-                intent.data = uri
-                activity.startActivity(intent)
+                activity.toSettingPermission()
             }
         }.show()//弹出引导用户去设置授权界面的弹框
     }
@@ -186,9 +207,12 @@ internal class PermissionCore {
     /**
      * 获取授权成功的权限集合
      */
-    private fun getGrantPermission(permissions: Array<out String>, grantResults: IntArray): Array<String> {
+    private fun getGrantPermission(
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ): Array<String> {
         val permission = mutableListOf<String>()
-        for (i in 0 until permissions.size) {
+        for (i in permissions.indices) {
             if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                 permission.add(permissions[i])
             }
@@ -199,9 +223,12 @@ internal class PermissionCore {
     /**
      * 获取未授权的权限集合
      */
-    private fun getDeniedPermission(permissions: Array<out String>, grantResults: IntArray): Array<String> {
+    private fun getDeniedPermission(
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ): Array<String> {
         val permission = mutableListOf<String>()
-        for (i in 0 until permissions.size) {
+        for (i in permissions.indices) {
             if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
                 permission.add(permissions[i])
             }
@@ -211,12 +238,10 @@ internal class PermissionCore {
 
     private fun granted(r: Result) {
         result.granted?.invoke(r)
-        manager?.granted(r)
     }
 
     private fun denied(r: Result) {
         result.denied?.invoke(r)
-        manager?.denied(r)
     }
 }
 

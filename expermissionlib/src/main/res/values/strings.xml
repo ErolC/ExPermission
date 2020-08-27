@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ExPermissionLib</string>
     <string name="setting">去设置</string>
-    <string name="settingMessage">请前往权限设置中心同意权限即可进行下一步</string>
+    <string name="settingMessage">请前往权限管理同意该权限即可进行下一步</string>
     <string name="settingTitle">设置权限</string>
 
 
@@ -31,5 +31,5 @@
    <string name="WRITE_EXTERNAL_STORAGE"> 修改/删除SD卡中的内容 </string>
     
     <string name="and_order">等</string>
-    <string name="apply_for_a_permission" formatted="false">申请%s权限,</string>
+    <string name="apply_for_a_permission" formatted="false">该操作需要"%s"权限,</string>
 </resources>

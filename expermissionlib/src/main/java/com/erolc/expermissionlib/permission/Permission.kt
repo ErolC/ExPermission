@@ -1,17 +1,16 @@
 package com.erolc.expermissionlib.permission
 
 import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.erolc.expermissionlib.model.Result
-import com.erolc.expermissionlib.permission.control.AnnotationManager
-import java.lang.ref.SoftReference
 
 /**
- * 用法：在activity或者fragment中可直接使用下列扩展方法，其中通过 pageUsePermissions()方法设置该页面需要的权限列表
- * 通过 requestPermission() 方法检查该页面是否同意上述方法请求的权限，其中该方法用三个，分别是activity，fragment以及FragmentActivity的扩展方法
- * 如果使用activity的扩展方法还需要在该activity的onRequestPermissionsResult回调上调用requestPermissionsResult()方法。
+
  *
  * 最后通过permissionResult()方法得到动态权限申请结果的回调
  *
@@ -49,7 +48,7 @@ fun Activity.pageUsePermissions(usePermissions: (requestCode: Int) -> Array<Stri
     core.setNeedPermissions(usePermissions)
 }
 
-fun androidx.fragment.app.Fragment.pageUsePermissions(usePermissions: (requestCode: Int) -> Array<String>) {
+fun Fragment.pageUsePermissions(usePermissions: (requestCode: Int) -> Array<String>) {
     val core = PermissionCoreFactory.create(this.javaClass.name)
     core.setNeedPermissions(usePermissions)
 }
@@ -66,7 +65,11 @@ fun Activity.requestPermission(requestCode: Int = DEFAULT_REQUEST_CODE) {
 /**
  * 该方法设置在Activity的onRequestPermissionsResult回调中。如果你使用了Activity.requestPermission方法，那么必须设置该方法才能正常获取结果
  */
-fun Activity.requestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+fun Activity.requestPermissionsResult(
+    requestCode: Int,
+    permissions: Array<out String>,
+    grantResults: IntArray
+) {
     val core = PermissionCoreFactory.create(this.javaClass.name)
     core.permissionResult(this, requestCode, permissions, grantResults)
 }
@@ -78,8 +81,7 @@ fun Activity.requestPermissionsResult(requestCode: Int, permissions: Array<out S
 fun FragmentActivity.requestPermission(requestCode: Int = DEFAULT_REQUEST_CODE) {
 
     val create = PermissionCoreFactory.create(this.javaClass.name)
-    if (create.manager == null)
-    AnnotationManager(SoftReference(this),create)
+
 
     val result: (TempFragment) -> Unit = {
         supportFragmentManager.beginTransaction().remove(it).commit()
@@ -94,10 +96,8 @@ fun FragmentActivity.requestPermission(requestCode: Int = DEFAULT_REQUEST_CODE) 
 fun Fragment.requestPermission(requestCode: Int = DEFAULT_REQUEST_CODE) {
     val create = PermissionCoreFactory.create(this.javaClass.name)
 
-    if (create.manager == null)
-    AnnotationManager(SoftReference(this),create)
-
-    val result: (TempFragment) -> Unit = { childFragmentManager.beginTransaction().remove(it).commit() }
+    val result: (TempFragment) -> Unit =
+        { childFragmentManager.beginTransaction().remove(it).commit() }
 
     val fragment = TempFragment.getInstance(this.javaClass.name, requestCode, result)
 
@@ -197,4 +197,15 @@ fun <T> Array<T>.has(body: (T) -> Boolean): Boolean {
         }
     }
     return false
+}
+
+/**
+ * 却权限管理页面设置权限
+ */
+fun Activity.toSettingPermission() {
+    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    val uri = Uri.fromParts("package", this.packageName, null)
+    intent.data = uri
+    this.startActivity(intent)
 }

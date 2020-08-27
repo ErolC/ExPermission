@@ -29,9 +29,9 @@ object Build {
     @Volatile
     @ColorInt
     var contentTextColor: Int? = null
+    internal var showDialog: ((permissions: MutableList<String>) -> Boolean)? = null
 
-    //是否需要展示引导界面
-    @Volatile
-    var isShow = true
-
+    fun showDialog(body: (permissions: MutableList<String>) -> Boolean) {
+        showDialog = body
+    }
 }

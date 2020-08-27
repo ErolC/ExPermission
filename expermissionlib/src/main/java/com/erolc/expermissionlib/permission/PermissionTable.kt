@@ -81,7 +81,8 @@ import com.erolc.expermissionlib.R
  *                  READ_EXTERNAL_STORAGE
  *                  WRITE_EXTERNAL_STORAGE
  */
-internal object PermissionTable {
+
+object PermissionTable {
 
     fun getPermissionName(resources: Resources, permission: String): String? {
         val table = mapOf(
