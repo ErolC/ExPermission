@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.erolc.expermission.databinding.ActivityExpandBinding;
-import com.erolc.expermissionlib.utils.PermissionUtils;
 
 
 public class TestActivity extends AppCompatActivity {
@@ -24,7 +23,7 @@ public class TestActivity extends AppCompatActivity {
     }
 
     public void requestPermission(View view){
-        PermissionUtils.requestPermission(this);
+
     }
 
 

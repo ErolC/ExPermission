@@ -1,14 +1,18 @@
 package com.erolc.expermission
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import com.erolc.expermission.databinding.ActivityLinkBinding
 import com.erolc.expermissionlib.permission.PermissionHandle
+import com.erolc.expermissionlib.utils.loge
 import com.erolc.expermissionlib.utils.showToast
+import java.lang.reflect.Method
 
 class Link : AppCompatActivity() {
     lateinit var handle:PermissionHandle
@@ -17,9 +21,6 @@ class Link : AppCompatActivity() {
         val binding =
             DataBindingUtil.setContentView<ActivityLinkBinding>(this, R.layout.activity_link)
         binding.data = "请求位置权限"
-
-
-
 
         handle = PermissionHandle.Build()
             .with(this)
@@ -34,7 +35,6 @@ class Link : AppCompatActivity() {
                     showToast("${it.requestCode} success")
                 }
             }.build()
-
     }
 
     fun requestPermission(view: View){

@@ -1,5 +1,6 @@
 package com.erolc.expermissionlib.permission
 
+import android.app.Activity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import java.lang.ref.SoftReference
@@ -9,19 +10,23 @@ class PermissionHandle private constructor(private val code: PermissionCore) {
     private var aReference: SoftReference<FragmentActivity>? = null
     private var fReference: SoftReference<Fragment>? = null
     private var result: (PermissionResult.() -> Unit)? = null
-    private var permissionSet:((Int)->Array<String>)? = null
+    private var permissionSet: ((Int) -> Array<String>)? = null
 
 
     private fun initialize() {
         //判断所需要的权限是否已经准备好了
-        code.hasPermission ?:  permissionSet?.apply { code.hasPermission = this }
+        code.hasPermission ?: permissionSet?.apply { code.hasPermission = this }
         result?.invoke(code.result)
     }
 
     fun request(requestCode: Int = DEFAULT_REQUEST_CODE) {
         initialize()
-        aReference?.get()?.requestPermission(requestCode)
-        fReference?.get()?.requestPermission(requestCode)
+        aReference?.get()?.apply {
+            (this as Activity).requestPermission(requestCode)
+        }
+        fReference?.get()?.apply {
+            requestPermission(requestCode)
+        }
     }
 
     class Build {
@@ -29,7 +34,7 @@ class PermissionHandle private constructor(private val code: PermissionCore) {
         private var aReference: SoftReference<FragmentActivity>? = null
         private var fReference: SoftReference<Fragment>? = null
         private var result: (PermissionResult.() -> Unit)? = null
-        private var permissionSet:((Int)->Array<String>)? = null
+        private var permissionSet: ((Int) -> Array<String>)? = null
 
 
         fun with(activity: FragmentActivity): Build {
@@ -44,7 +49,7 @@ class PermissionHandle private constructor(private val code: PermissionCore) {
             return this
         }
 
-        fun pageUserPermissions(body:(Int)->Array<String>):Build{
+        fun pageUserPermissions(body: (Int) -> Array<String>): Build {
             permissionSet = body
             return this
         }
