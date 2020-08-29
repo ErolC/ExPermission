@@ -6,7 +6,7 @@ import android.view.View
 import com.erolc.expermissionlib.permission.PermissionHandle
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity()  {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     fun link(view: View) {
         Link.start(this)
     }
+
 
 
 }

@@ -2,6 +2,7 @@ package com.erolc.expermissionlib.permission
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -45,12 +46,12 @@ const val DEFAULT_REQUEST_CODE = 0
 
 fun Activity.pageUsePermissions(usePermissions: (requestCode: Int) -> Array<String>) {
     val core = PermissionCoreFactory.create(this.javaClass.name)
-    core.setNeedPermissions(usePermissions)
+    core.hasPermission = usePermissions
 }
 
 fun Fragment.pageUsePermissions(usePermissions: (requestCode: Int) -> Array<String>) {
     val core = PermissionCoreFactory.create(this.javaClass.name)
-    core.setNeedPermissions(usePermissions)
+    core.hasPermission = usePermissions
 }
 
 
@@ -79,10 +80,7 @@ fun Activity.requestPermissionsResult(
  * 在FragmentActivity中的检查权限方法，该检查方法不需要设置requestPermissionsResult()
  */
 fun FragmentActivity.requestPermission(requestCode: Int = DEFAULT_REQUEST_CODE) {
-
     val create = PermissionCoreFactory.create(this.javaClass.name)
-
-
     val result: (TempFragment) -> Unit = {
         supportFragmentManager.beginTransaction().remove(it).commit()
     }
@@ -197,15 +195,4 @@ fun <T> Array<T>.has(body: (T) -> Boolean): Boolean {
         }
     }
     return false
-}
-
-/**
- * 却权限管理页面设置权限
- */
-fun Activity.toSettingPermission() {
-    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    val uri = Uri.fromParts("package", this.packageName, null)
-    intent.data = uri
-    this.startActivity(intent)
 }

@@ -14,7 +14,7 @@ class PermissionHandle private constructor(private val code: PermissionCore) {
 
     private fun initialize() {
         //判断所需要的权限是否已经准备好了
-        code.hasPermission ?:  permissionSet?.apply { code.setNeedPermissions(this) }
+        code.hasPermission ?:  permissionSet?.apply { code.hasPermission = this }
         result?.invoke(code.result)
     }
 
